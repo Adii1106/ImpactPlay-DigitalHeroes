@@ -1,10 +1,14 @@
 import React from "react";
 import prisma from "@/lib/prisma";
+import { DrawExecutor } from "@/components/features/DrawExecutor";
+import { getDrawHistory } from "@/actions/drawActions";
+import { format } from "date-fns";
 
 export default async function AdminDashboardPage() {
   const userCount = await prisma.userProfile.count();
   const activeSubs = await prisma.subscription.count({ where: { status: "active" } });
   const completedDraws = await prisma.draw.count({ where: { status: "completed" } });
+  const drawHistory = await getDrawHistory();
 
   return (
     <div className="space-y-8">
@@ -26,16 +30,51 @@ export default async function AdminDashboardPage() {
         ))}
       </div>
 
-      <div className="p-12 rounded-3xl bg-red-600/5 border border-red-600/10 flex flex-col items-center justify-center text-center space-y-6">
-         <div className="max-w-md space-y-2">
-           <h3 className="text-xl font-bold text-red-500">Manual Draw Engine</h3>
-           <p className="text-sm text-neutral-400">
-             Trigger the monthly winner selection manually. This will calculate prizes, split charity donations, and notify winners.
-           </p>
-         </div>
-         <button className="px-8 py-3 bg-red-600 hover:bg-red-500 text-white font-bold rounded-xl shadow-lg shadow-red-600/20 transition-all active:scale-95">
-           EXEUCTE MONTHLY DRAW
-         </button>
+      <DrawExecutor />
+
+      <div className="space-y-4">
+        <h3 className="text-xl font-bold">Draw History</h3>
+        <div className="rounded-2xl bg-neutral-900 border border-neutral-800 overflow-hidden">
+          <table className="w-full text-left">
+            <thead className="bg-neutral-950 border-b border-neutral-800">
+              <tr>
+                <th className="px-6 py-4 text-xs font-semibold text-neutral-500 uppercase tracking-wider">Date</th>
+                <th className="px-6 py-4 text-xs font-semibold text-neutral-500 uppercase tracking-wider">Winner</th>
+                <th className="px-6 py-4 text-xs font-semibold text-neutral-500 uppercase tracking-wider">Prize Pool</th>
+                <th className="px-6 py-4 text-xs font-semibold text-neutral-500 uppercase tracking-wider">Donation</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-neutral-800">
+              {drawHistory.length > 0 ? (
+                drawHistory.map((draw) => {
+                  const winner = draw.winners[0];
+                  return (
+                    <tr key={draw.id} className="hover:bg-neutral-800/50 transition-colors">
+                      <td className="px-6 py-4 text-sm font-medium">
+                        {draw.executedAt ? format(new Date(draw.executedAt), "MMM dd, yyyy HH:mm") : "Pending"}
+                      </td>
+                      <td className="px-6 py-4 text-sm font-medium text-white">
+                        {winner?.user?.email || "Unknown"}
+                      </td>
+                      <td className="px-6 py-4 text-sm font-bold text-blue-400">
+                        ${draw.totalPrizePool.toLocaleString()}
+                      </td>
+                      <td className="px-6 py-4 text-sm text-green-500 font-bold">
+                        ${winner?.charityDonation.toLocaleString()}
+                      </td>
+                    </tr>
+                  );
+                })
+              ) : (
+                <tr>
+                  <td colSpan={4} className="px-6 py-12 text-center text-neutral-500">
+                    No draws have been executed yet.
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   );
