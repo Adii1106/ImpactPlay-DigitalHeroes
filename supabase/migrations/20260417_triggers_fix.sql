@@ -1,20 +1,7 @@
--- Auto-Sync Auth User to Profile
-DROP TRIGGER IF EXISTS on_auth_user_created ON auth.users;
-CREATE OR REPLACE FUNCTION public.handle_new_user()
-RETURNS trigger AS $$
-BEGIN
-  INSERT INTO public."UserProfile" (id, email)
-  VALUES (new.id, new.email);
-  RETURN new;
-END;
-$$ LANGUAGE plpgsql SECURITY DEFINER;
-
-CREATE TRIGGER on_auth_user_created
-  AFTER INSERT ON auth.users
-  FOR EACH ROW EXECUTE PROCEDURE public.handle_new_user();
-
--- Safe 5-Score Maximum Trigger (AFTER INSERT)
+-- Fix: Use AFTER INSERT to ensure the NEW score is included in the comparison
 DROP TRIGGER IF EXISTS check_score_limit ON "Score";
+DROP FUNCTION IF EXISTS enforce_score_limit();
+
 CREATE OR REPLACE FUNCTION enforce_score_limit()
 RETURNS TRIGGER AS $$
 BEGIN

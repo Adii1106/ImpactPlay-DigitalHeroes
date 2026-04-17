@@ -85,5 +85,6 @@ model DrawWinner {
   userPrize             Float
   charityDonation       Float
   status                String      @default("pending_verification")
+  proofUrl              String?
   createdAt             DateTime    @default(now())
 }

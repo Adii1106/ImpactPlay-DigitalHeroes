@@ -9,7 +9,7 @@ export async function getCharities() {
 }
 
 export async function getUserPreferences() {
-  const supabase = createSupabaseServer();
+  const supabase = await createSupabaseServer();
   const { data: { user } } = await supabase.auth.getUser();
   
   if (!user) return null;
@@ -21,7 +21,7 @@ export async function getUserPreferences() {
 }
 
 export async function updateCharityPreference(charityId: string, contributionPct: number) {
-  const supabase = createSupabaseServer();
+  const supabase = await createSupabaseServer();
   const { data: { user } } = await supabase.auth.getUser();
   
   if (!user) throw new Error("Unauthorized");

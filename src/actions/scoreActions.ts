@@ -5,11 +5,15 @@ import { createSupabaseServer } from "@/lib/supabase/server";
 import { revalidatePath } from "next/cache";
 
 export async function addScore(value: number, playedAtString: string) {
-  const supabase = createSupabaseServer();
+  const supabase = await createSupabaseServer();
   const { data: { user } } = await supabase.auth.getUser();
   
   if (!user) {
     throw new Error("Unauthorized");
+  }
+
+  if (value < 1 || value > 45) {
+    return { success: false, error: "Stableford scores must be between 1 and 45." };
   }
 
   // PRD: Unique constraint handled by Prisma error catching
@@ -36,7 +40,7 @@ export async function addScore(value: number, playedAtString: string) {
 }
 
 export async function getLatestScores() {
-  const supabase = createSupabaseServer();
+  const supabase = await createSupabaseServer();
   const { data: { user } } = await supabase.auth.getUser();
   
   if (!user) return [];

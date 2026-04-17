@@ -7,7 +7,7 @@ import { revalidatePath } from "next/cache";
 export async function executeAdminDraw(totalPrizePool: number) {
   if (totalPrizePool <= 0) throw new Error("Prize pool must be greater than 0");
 
-  const supabase = createSupabaseServer();
+  const supabase = await createSupabaseServer();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) throw new Error("Unauthorized");
 

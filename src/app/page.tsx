@@ -5,7 +5,7 @@ import {
   Heart, 
   Zap, 
   ArrowRight, 
-  Github, 
+  Globe, 
   Shield 
 } from "lucide-react";
 
@@ -130,7 +130,7 @@ export default function LandingPage() {
         {/* App Stats / Footer */}
         <footer className="py-20 border-t border-white/5 text-center space-y-8">
            <div className="flex items-center justify-center space-x-2 grayscale opacity-50 hover:grayscale-0 hover:opacity-100 transition-all">
-              <Github className="w-6 h-6" />
+              <Globe className="w-6 h-6" />
               <span className="font-bold tracking-tighter uppercase text-sm">Source Available</span>
            </div>
            <p className="text-neutral-500 text-xs font-bold uppercase tracking-[0.5em]">

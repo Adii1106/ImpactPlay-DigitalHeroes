@@ -5,7 +5,7 @@ import { createSupabaseServer } from "@/lib/supabase/server";
 import { revalidatePath } from "next/cache";
 
 export async function toggleSubscriptionMock(plan: "monthly" | "yearly", status: "active" | "canceled") {
-  const supabase = createSupabaseServer();
+  const supabase = await createSupabaseServer();
   const { data: { user } } = await supabase.auth.getUser();
   
   if (!user) throw new Error("Unauthorized");
@@ -36,7 +36,7 @@ export async function toggleSubscriptionMock(plan: "monthly" | "yearly", status:
 }
 
 export async function getSubscription() {
-  const supabase = createSupabaseServer();
+  const supabase = await createSupabaseServer();
   const { data: { user } } = await supabase.auth.getUser();
   
   if (!user) return null;
