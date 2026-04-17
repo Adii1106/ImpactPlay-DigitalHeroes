@@ -1,0 +1,90 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model UserProfile {
+  id        String   @id // Maps to Supabase auth.users UUID
+  email     String   @unique
+  role      String   @default("user") // "user" or "admin"
+  createdAt DateTime @default(now())
+
+  subscriptions   Subscription[]
+  scores          Score[]
+  userPreferences UserPreference?
+  entries         DrawEntry[]
+  winnings        DrawWinner[]
+}
+
+model Subscription {
+  id        String      @id @default(uuid())
+  userId    String
+  user      UserProfile @relation(fields: [userId], references: [id], onDelete: Cascade)
+  status    String      // active, inactive, canceled
+  plan      String      // monthly, yearly
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+}
+
+model Score {
+  id        String      @id @default(uuid())
+  userId    String
+  user      UserProfile @relation(fields: [userId], references: [id], onDelete: Cascade)
+  value     Int
+  playedAt  DateTime    @db.Date
+  createdAt DateTime    @default(now())
+
+  @@unique([userId, playedAt])
+}
+
+model Charity {
+  id          String           @id @default(uuid())
+  name        String
+  description String?
+  preferences UserPreference[]
+}
+
+model UserPreference {
+  id                     String      @id @default(uuid())
+  userId                 String      @unique
+  user                   UserProfile @relation(fields: [userId], references: [id], onDelete: Cascade)
+  defaultCharityId       String?
+  charity                Charity?    @relation(fields: [defaultCharityId], references: [id])
+  charityContributionPct Int         @default(10) // 0 - 100 percentage
+}
+
+model Draw {
+  id             String       @id @default(uuid())
+  status         String       @default("pending") // pending, completed
+  totalPrizePool Float        @default(0)
+  createdAt      DateTime     @default(now())
+  executedAt     DateTime?
+  
+  entries        DrawEntry[]
+  winners        DrawWinner[]
+}
+
+model DrawEntry {
+  id        String      @id @default(uuid())
+  drawId    String
+  draw      Draw        @relation(fields: [drawId], references: [id], onDelete: Cascade)
+  userId    String
+  user      UserProfile @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model DrawWinner {
+  id                    String      @id @default(uuid())
+  drawId                String
+  draw                  Draw        @relation(fields: [drawId], references: [id], onDelete: Cascade)
+  userId                String
+  user                  UserProfile @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userPrize             Float
+  charityDonation       Float
+  status                String      @default("pending_verification")
+  createdAt             DateTime    @default(now())
+}
