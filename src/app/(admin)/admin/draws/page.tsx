@@ -24,7 +24,7 @@ export default async function AdminDrawsPage() {
           <div key={draw.id} className="p-8 rounded-3xl bg-neutral-900 border border-neutral-800 flex items-center justify-between">
             <div className="space-y-1">
               <span className="text-[10px] font-bold uppercase tracking-widest text-neutral-500">
-                {format(new Date(draw.executedAt), "MMMM dd, yyyy")}
+                {draw.executedAt ? format(new Date(draw.executedAt), "MMMM dd, yyyy") : "Pending"}
               </span>
               <h3 className="text-xl font-bold text-white">
                 Total Prize: <span className="text-blue-500">${draw.totalPrizePool.toLocaleString()}</span>

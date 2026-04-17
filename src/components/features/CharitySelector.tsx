@@ -62,7 +62,7 @@ export function CharitySelector({ charities, currentCharityId, currentPct = 10 }
 
         <Slider 
           value={[pct]} 
-          onValueChange={(v) => setPct(v[0])} 
+          onValueChange={(v: any) => setPct(v[0])} 
           min={5} 
           max={100} 
           step={5}

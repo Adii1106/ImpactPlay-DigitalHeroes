@@ -7,11 +7,11 @@ import { Zap, Mail, Lock } from "lucide-react";
 import { SubmitButton } from "@/components/ui/SubmitButton";
 
 const initialState = {
-  error: null,
+  error: "",
 };
 
 export default function LoginPage() {
-  const [state, formAction] = useActionState(login, initialState);
+  const [state, formAction] = useActionState(login as any, initialState);
 
   return (
     <div className="min-h-screen bg-neutral-950 text-white flex items-center justify-center p-6">

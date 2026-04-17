@@ -14,7 +14,7 @@ export async function login(prevState: any, formData: FormData) {
   });
 
   if (error) {
-    return { error: error.message };
+    return { error: error.message, success: null };
   }
 
   redirect("/dashboard");
@@ -34,10 +34,10 @@ export async function signup(prevState: any, formData: FormData) {
   });
 
   if (error) {
-    return { error: error.message };
+    return { error: error.message, success: null };
   }
 
-  return { success: "Check your email for the confirmation link." };
+  return { error: null, success: "Check your email for the confirmation link." };
 }
 
 export async function signOut() {
