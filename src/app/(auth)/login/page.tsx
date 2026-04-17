@@ -22,8 +22,42 @@ export default function LoginPage() {
               <Zap className="w-8 h-8 text-white" fill="white" />
             </div>
           </div>
-          <h1 className="text-3xl font-black tracking-tighter uppercase">Welcome Back</h1>
-          <p className="text-neutral-500 font-medium">Enter your credentials to access the arena.</p>
+          <h1 className="text-3xl font-black tracking-tighter uppercase">Welcome {state?.error ? 'to the Arena' : 'Back'}</h1>
+          <p className="text-neutral-500 font-medium pb-2">Enter your credentials to access the arena.</p>
+
+          <div className="flex gap-3 justify-center pt-2">
+            <button 
+              type="button"
+              onClick={() => {
+                const searchParams = new URLSearchParams(window.location.search);
+                const emailInput = document.querySelector('input[name="email"]') as HTMLInputElement;
+                const passwordInput = document.querySelector('input[name="password"]') as HTMLInputElement;
+                if (emailInput && passwordInput) {
+                  emailInput.value = "aditya@example.com";
+                  passwordInput.value = "123456";
+                }
+              }}
+              className="flex-1 p-3 rounded-2xl bg-neutral-900 border border-neutral-800 hover:border-blue-500/50 transition-all text-left group"
+            >
+              <span className="text-[10px] font-black uppercase text-blue-500 tracking-widest block mb-1">Demo Admin</span>
+              <span className="text-xs font-bold text-neutral-300 block">aditya.mishra...</span>
+            </button>
+            <button 
+              type="button"
+              onClick={() => {
+                const emailInput = document.querySelector('input[name="email"]') as HTMLInputElement;
+                const passwordInput = document.querySelector('input[name="password"]') as HTMLInputElement;
+                if (emailInput && passwordInput) {
+                  emailInput.value = "user1@gmail.com";
+                  passwordInput.value = "123456789";
+                }
+              }}
+              className="flex-1 p-3 rounded-2xl bg-neutral-900 border border-neutral-800 hover:border-violet-500/50 transition-all text-left group"
+            >
+              <span className="text-[10px] font-black uppercase text-violet-500 tracking-widest block mb-1">Demo User</span>
+              <span className="text-xs font-bold text-neutral-300 block">user1@gmail.com</span>
+            </button>
+          </div>
         </div>
 
         {state?.error && (

@@ -41,6 +41,8 @@ export function ScoreForm() {
           onChange={(e) => setValue(e.target.value)} 
           placeholder="Enter your score"
           required
+          min={1}
+          max={45}
           className="bg-neutral-950 border-neutral-800 focus:ring-blue-500"
         />
       </div>
